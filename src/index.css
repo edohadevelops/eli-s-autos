@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base html/body colors match the public site (the default route).
+   AdminLayout and PublicLayout both set their own background explicitly,
+   so this is just the fallback before either mounts. */
+html,
+body,
+#root {
+  height: 100%;
+  background: #f0f6fb;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: #101828;
+}
+
+/* ---------- Animation system ---------- */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Used by the Reveal component: elements start hidden and animate in once
+   they scroll into view. */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Car loader: the car sways side to side while a dashed road scrolls
+   beneath it, like a little driving loop. */
+@keyframes carDrive {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(130px); }
+}
+@keyframes carBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes roadDash {
+  from { background-position-x: 0; }
+  to { background-position-x: -40px; }
+}
+
+/* Inline button loader: a small car drives across the button itself,
+   replacing the label while a submit/action is in flight. Uses currentColor
+   so it matches whatever text color the button already has. */
+@keyframes buttonCarDrive {
+  0% { transform: translateX(-60px); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateX(60px); opacity: 0; }
+}
+
+/* Generic hover lift for cards across the public site. */
+.hover-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+.hover-lift:active {
+  transform: translateY(-1px) scale(0.97);
+}
+
+/* Slow, subtle zoom on the hero image, classic "Ken Burns" treatment. */
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+.hero-img {
+  animation: kenBurns 20s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .hover-lift {
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ---------- Print styles ---------- */
+/* Used by the Reports page. Anything with .no-print (sidebar, buttons,
+   tabs) is hidden entirely. Anything inside .print-surface gets forced to
+   plain black-on-white, since the app's dark theme would otherwise print
+   as a mostly-black page and waste ink. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+  }
+  .print-surface,
+  .print-surface * {
+    background: white !important;
+    color: #111111 !important;
+    border-color: #cccccc !important;
+    box-shadow: none !important;
+  }
+  .print-surface table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .print-surface th,
+  .print-surface td {
+    border: 1px solid #cccccc !important;
+    padding: 6px 8px !important;
+  }
+}
